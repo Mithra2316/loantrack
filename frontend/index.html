@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LoanTrack</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; background: #f7f9fc; color: #222; }
+    h1 { color: #1a365d; }
+    .card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 24px; }
+    form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    input, select, button { padding: 10px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 14px; }
+    button { background: #2b6cb0; color: #fff; border: none; cursor: pointer; font-weight: bold; }
+    button:hover { background: #2c5282; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { text-align: left; padding: 10px; border-bottom: 1px solid #e2e8f0; }
+    th { background: #edf2f7; }
+    #message { margin-top: 10px; font-weight: bold; color: #2f855a; }
+  </style>
+</head>
+<body>
+  <h1>LoanTrack</h1>
+
+  <div class="card">
+    <h2>Add New Loan</h2>
+    <form id="loanForm">
+      <input type="text" id="borrower_name" placeholder="Borrower Name" required />
+      <input type="number" id="loan_amount" placeholder="Loan Amount" step="0.01" required />
+      <input type="text" id="property_city" placeholder="Property City" />
+      <select id="status">
+        <option value="PENDING">PENDING</option>
+        <option value="UNDER_REVIEW">UNDER_REVIEW</option>
+        <option value="APPROVED">APPROVED</option>
+      </select>
+      <button type="submit">Add Loan</button>
+    </form>
+    <div id="message"></div>
+  </div>
+
+  <div class="card">
+    <h2>Loans</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Borrower</th>
+          <th>Amount</th>
+          <th>City</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="loansTable"></tbody>
+    </table>
+  </div>
+
+  <script>
+    async function loadLoans() {
+      const res = await fetch('/api/loans');
+      const loans = await res.json();
+      const tbody = document.getElementById('loansTable');
+      tbody.innerHTML = '';
+      loans.forEach(loan => {
+        const row = `<tr>
+          <td>${loan.id}</td>
+          <td>${loan.borrower_name}</td>
+          <td>${Number(loan.loan_amount).toLocaleString('en-IN')}</td>
+          <td>${loan.property_city || ''}</td>
+          <td>${loan.status}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    document.getElementById('loanForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        borrower_name: document.getElementById('borrower_name').value,
+        loan_amount: parseFloat(document.getElementById('loan_amount').value),
+        property_city: document.getElementById('property_city').value,
+        status: document.getElementById('status').value
+      };
+      const res = await fetch('/api/loans', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        document.getElementById('loanForm').reset();
+        document.getElementById('message').textContent = 'Loan added successfully!';
+        loadLoans();
+      } else {
+        document.getElementById('message').textContent = 'Failed to add loan.';
+      }
+    });
+
+    loadLoans();
+  </script>
+</body>
+</html>
