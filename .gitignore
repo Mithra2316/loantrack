@@ -1,0 +1,13 @@
+﻿.env
+k8s/secret.yaml
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+dist/
+build/
+pgdata/
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
