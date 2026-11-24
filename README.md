@@ -1,6 +1,8 @@
 ﻿\# LoanTrack — Three-Tier DevOps \& SRE Assessment
 
+## Architecture
 
+![LoanTrack Architecture](docs/architecture.png)
 
 A containerized three-tier loan tracking application built with \*\*Nginx\*\* (frontend), \*\*Flask\*\* (backend API), and \*\*PostgreSQL 16\*\* (database), deployed locally via Docker Compose and Kubernetes (Minikube).
 
