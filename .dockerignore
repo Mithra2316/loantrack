@@ -1,0 +1,12 @@
+.git
+.gitignore
+.env
+.env.example
+k8s/
+db/
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+pgdata/
+*.md
