@@ -18,41 +18,27 @@ A containerized three-tier loan tracking application built with \*\*Nginx\*\* (f
 
 \- \*\*Container Runtime\*\*: `containerd` (Minikube) / Docker Engine 29.6.1 (Compose)
 
-
-
-\## Architecture
-
-
+## Architecture
 
 ```text
-
 Browser / Client
-
-&#x20;  │
-
-&#x20;  ├── Docker Compose (:8080) ──► Nginx Frontend (:8080)
-
-&#x20;  │                                    │
-
-&#x20;  └── Kubernetes (NodePort 30080) ────►│ HTTP /api/\*
-
-&#x20;                                       ▼
-
-&#x20;                              Flask Backend (:5000, ClusterIP, 3 replicas)
-
-&#x20;                                       │
-
-&#x20;                                       ├── GET /healthz (process alive)
-
-&#x20;                                       ├── GET /readyz  (DB reachable)
-
-&#x20;                                       │
-
-&#x20;                                       ▼ psycopg2 ThreadedConnectionPool
-
-&#x20;                              PostgreSQL 16 (:5432, ClusterIP, PVC / Named Volume)
-
+   |
+   +--> Docker Compose (:8080) -----> Nginx Frontend (:8080)
+   |                                        |
+   +--> Kubernetes (NodePort 30080) --------+--> HTTP /api/*
+                                            v
+                                   Flask Backend (:5000, ClusterIP, 3 replicas)
+                                            |
+                                            +--> GET /healthz (process alive)
+                                            +--> GET /readyz  (DB reachable)
+                                            |
+                                            v psycopg2 ThreadedConnectionPool
+                                   PostgreSQL 16 (:5432, ClusterIP, PVC / Named Volume)
 ```
+
+
+
+
 
 
 
